@@ -37,12 +37,14 @@ public class MainActivity extends ActionBarActivity {
 
         LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        longitude = location.getLongitude();
-        latitude = location.getLatitude();
+        longitude = 0.0;
+        latitude = 0.0;
         final LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 longitude = location.getLongitude();
                 latitude = location.getLatitude();
+                tvCity.setText("latitude : " + latitude + "/ longitude : " + longitude);
+                System.out.println("in");
             }
 
             public void onProviderDisabled(String arg0) {
@@ -62,17 +64,7 @@ public class MainActivity extends ActionBarActivity {
         };
 
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
-
-        Geocoder myLocation = new Geocoder(getApplicationContext(), Locale.getDefault());
-        List<Address> myList = null;
-        try {
-            myList = myLocation.getFromLocation(latitude, longitude, 1);
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-
-        tvCity.setText((CharSequence) myList);
+        tvCity.setText("latitude : " + latitude + "/ longitude : " + longitude);
     }
 
     @Override
