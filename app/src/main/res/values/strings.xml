@@ -2,12 +2,13 @@
 <resources>
 
     <string name="app_name">Meteo</string>
-    <string name="titre">Meteo de :</string>
+    <string name="titre">Meteo sur </string>
     <string name="city">Angers</string>
     <string name="pression">Pression :</string>
     <string name="humidite">Humidité :</string>
     <string name="vent">Vent :</string>
     <string name="aujourdhui">Aujourd\'hui</string>
+    <string name="description">Description</string>
     <string name="J1">J+1</string>
     <string name="J2">J+2</string>
     <string name="J3">J+3</string>

@@ -51,19 +51,19 @@ public class MainActivity extends ActionBarActivity {
 
         String city = "Angers,FR";
 
-        cityText = (TextView) findViewById(R.id.cityText);
-        condDescr = (TextView) findViewById(R.id.condDescr);
-        temp = (TextView) findViewById(R.id.temp);
-        hum = (TextView) findViewById(R.id.hum);
-        press = (TextView) findViewById(R.id.press);
-        windSpeed = (TextView) findViewById(R.id.windSpeed);
-        windDeg = (TextView) findViewById(R.id.windDeg);
-        imgView = (ImageView) findViewById(R.id.condIcon);
+       cityText = (TextView) findViewById(R.id.tvCity);
+        condDescr = (TextView) findViewById(R.id.description);
+      //  temp = (TextView) findViewById(R.id.temp);
+        hum = (TextView) findViewById(R.id.humidite);
+        press = (TextView) findViewById(R.id.pression);
+        windSpeed = (TextView) findViewById(R.id.vent);
+        //windDeg = (TextView) findViewById(R.id.windDeg);
+        imgView = (ImageView) findViewById(R.id.image);
 
         JSONWeatherTask task = new JSONWeatherTask();
         if(isNetworkAvailable())    task.execute(new String[]{city});
 
-        tvCoordonnes = (TextView) findViewById(R.id.coord);
+        tvCoordonnes = (TextView) findViewById(R.id.tvCity);
 
 
         LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
@@ -74,7 +74,7 @@ public class MainActivity extends ActionBarActivity {
             public void onLocationChanged(Location location) {
                 longitude = location.getLongitude();
                 latitude = location.getLatitude();
-                tvCoordonnes.setText(latitude + " / " + longitude);
+            //    tvCoordonnes.setText(latitude + " / " + longitude);
             }
 
             public void onProviderDisabled(String arg0) {
@@ -94,7 +94,7 @@ public class MainActivity extends ActionBarActivity {
         };
 
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
-        tvCoordonnes.setText(latitude + " / " + longitude);
+        //tvCoordonnes.setText(latitude + " / " + longitude);
     }
 
     @Override
@@ -136,7 +136,7 @@ public class MainActivity extends ActionBarActivity {
                 weather = JSONWeatherParser.getWeather(data);
 
                 // Let's retrieve the icon
-                weather.iconData = ( (new WeatherHttpClient()).getImage(weather.currentCondition.getIcon()));
+               // weather.iconData = ( (new WeatherHttpClient()).getImage(weather.currentCondition.getIcon()));
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -152,18 +152,28 @@ public class MainActivity extends ActionBarActivity {
         protected void onPostExecute(Weather weather) {
             super.onPostExecute(weather);
 
-            if (weather.iconData != null && weather.iconData.length > 0) {
+            /*if (weather.iconData != null && weather.iconData.length > 0) {
                 Bitmap img = BitmapFactory.decodeByteArray(weather.iconData, 0, weather.iconData.length);
                 imgView.setImageBitmap(img);
+            }*/
+
+           cityText.setText(" "+weather.location.getCity() + " (" + weather.location.getCountry()+")");
+           condDescr.setText(weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescr() + ")");
+//            temp.setText("" + Math.round((weather.temperature.getTemp() - 273.15)) + "°C");
+            hum.setText("Humidité :" + weather.currentCondition.getHumidity() + "%");
+            press.setText("Pression :" + weather.currentCondition.getPressure() + " hPa");
+            windSpeed.setText("Vent :" + (int)weather.wind.getSpeed()*3.6 + " km/h");
+  //          windDeg.setText("" + weather.wind.getDeg() + "°");
+
+            switch(weather.currentCondition.getWeatherId()){
+                case 800:imgView.setImageResource(R.drawable.clearsky);break;               //sunny
+                case 801:imgView.setImageResource(R.drawable.fewclouds);break;              //m-cloudy
+                case 802:imgView.setImageResource(R.drawable.scatteredclouds);break;        //partly-cloudy
+                case 803:imgView.setImageResource(R.drawable.brokenclouds);break;           //fair
+                case 804:imgView.setImageResource(R.drawable.overcastclouds);break;         //smoke
+                default : imgView.setImageResource(R.drawable.na);break;
             }
 
-            cityText.setText(weather.location.getCity() + "," + weather.location.getCountry());
-            condDescr.setText(weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescr() + ")");
-            temp.setText("" + Math.round((weather.temperature.getTemp() - 273.15)) + "°C");
-            hum.setText("" + weather.currentCondition.getHumidity() + "%");
-            press.setText("" + weather.currentCondition.getPressure() + " hPa");
-            windSpeed.setText("" + weather.wind.getSpeed() + " mps");
-            windDeg.setText("" + weather.wind.getDeg() + "°");
 
         }
 

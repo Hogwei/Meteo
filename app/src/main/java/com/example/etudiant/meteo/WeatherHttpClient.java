@@ -15,6 +15,7 @@ public class WeatherHttpClient {
 
 
         private static String BASE_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
+        private static String LANGUE = "&lang=fr";
         private static String IMG_URL = "http://openweathermap.org/img/w/";
 
 
@@ -23,7 +24,7 @@ public class WeatherHttpClient {
             InputStream is = null;
 
             try {
-                con = (HttpURLConnection) ( new URL(BASE_URL + location)).openConnection();
+                con = (HttpURLConnection) ( new URL(BASE_URL + location + LANGUE)).openConnection();
                 con.setRequestMethod("GET");
                 con.setDoInput(true);
                 con.setDoOutput(true);
