@@ -1,16 +1,26 @@
 package com.example.etudiant.meteo;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.etudiant.meteo.model.Weather;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,19 +30,40 @@ import java.util.Locale;
 public class MainActivity extends ActionBarActivity {
 
     double latitude, longitude;
+    private TextView tvCoordonnes;
 
-    private TextView tvCity;
-    private TextView tvTemperature0, tvTemperature1, tvTemperature2, tvTemperature3, tvTemperature4, tvTemperature5;
-    private TextView tvPrecipation0, tvPrecipation1, tvPrecipation2, tvPrecipation3, tvPrecipation4, tvPrecipation5;
-    private TextView tvHumidity0, tvHumidity1, tvHumidity2, tvHumidity3, tvHumidity4, tvHumidity5;
-    private TextView tvDay0, tvDay1, tvDay2, tvDay3, tvDay4, tvDay5;
+    private TextView cityText;
+    private TextView condDescr;
+    private TextView temp;
+    private TextView hum;
+    private TextView press;
+    private TextView windSpeed;
+    private TextView windDeg;
+    private ImageView imgView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
-        tvCity = (TextView) findViewById(R.id.tvCity);
+
+        String city = "Angers,FR";
+
+        cityText = (TextView) findViewById(R.id.cityText);
+        condDescr = (TextView) findViewById(R.id.condDescr);
+        temp = (TextView) findViewById(R.id.temp);
+        hum = (TextView) findViewById(R.id.hum);
+        press = (TextView) findViewById(R.id.press);
+        windSpeed = (TextView) findViewById(R.id.windSpeed);
+        windDeg = (TextView) findViewById(R.id.windDeg);
+        imgView = (ImageView) findViewById(R.id.condIcon);
+
+        JSONWeatherTask task = new JSONWeatherTask();
+        if(isNetworkAvailable())    task.execute(new String[]{city});
+
+        tvCoordonnes = (TextView) findViewById(R.id.coord);
 
 
         LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
@@ -43,8 +74,7 @@ public class MainActivity extends ActionBarActivity {
             public void onLocationChanged(Location location) {
                 longitude = location.getLongitude();
                 latitude = location.getLatitude();
-                tvCity.setText("latitude : " + latitude + "/ longitude : " + longitude);
-                System.out.println("in");
+                tvCoordonnes.setText(latitude + " / " + longitude);
             }
 
             public void onProviderDisabled(String arg0) {
@@ -64,7 +94,7 @@ public class MainActivity extends ActionBarActivity {
         };
 
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
-        tvCity.setText("latitude : " + latitude + "/ longitude : " + longitude);
+        tvCoordonnes.setText(latitude + " / " + longitude);
     }
 
     @Override
@@ -95,8 +125,62 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void getWeather(){
+    private class JSONWeatherTask extends AsyncTask<String, Void, Weather> {
+
+        @Override
+        protected Weather doInBackground(String... params) {
+            Weather weather = new Weather();
+            String data = ( (new WeatherHttpClient()).getWeatherData(params[0]));
+
+            try {
+                weather = JSONWeatherParser.getWeather(data);
+
+                // Let's retrieve the icon
+                weather.iconData = ( (new WeatherHttpClient()).getImage(weather.currentCondition.getIcon()));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return weather;
+
+        }
+
+
+
+
+        @Override
+        protected void onPostExecute(Weather weather) {
+            super.onPostExecute(weather);
+
+            if (weather.iconData != null && weather.iconData.length > 0) {
+                Bitmap img = BitmapFactory.decodeByteArray(weather.iconData, 0, weather.iconData.length);
+                imgView.setImageBitmap(img);
+            }
+
+            cityText.setText(weather.location.getCity() + "," + weather.location.getCountry());
+            condDescr.setText(weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescr() + ")");
+            temp.setText("" + Math.round((weather.temperature.getTemp() - 273.15)) + "°C");
+            hum.setText("" + weather.currentCondition.getHumidity() + "%");
+            press.setText("" + weather.currentCondition.getPressure() + " hPa");
+            windSpeed.setText("" + weather.wind.getSpeed() + " mps");
+            windDeg.setText("" + weather.wind.getDeg() + "°");
+
+        }
+
+
+
+
+
 
 
     }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }
+
+
