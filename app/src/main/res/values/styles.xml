@@ -1,8 +1,9 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-    </style>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"></style>
+    <style name="data" parent="TextAppearance.AppCompat.Medium"></style>
+    <style name="lab" parent="TextAppearance.AppCompat.Body1"></style>
+    <style name="tempStyle" parent="TextAppearance.AppCompat.Display1"></style>
 
 </resources>
