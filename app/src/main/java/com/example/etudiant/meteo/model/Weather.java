@@ -4,7 +4,6 @@ package com.example.etudiant.meteo.model;
  * Created by Seb on 03/02/15.
  */
 public class Weather {
-    public String day;
     public Location location;
     public CurrentCondition currentCondition = new CurrentCondition();
     public Temperature temperature = new Temperature();
@@ -20,10 +19,16 @@ public class Weather {
         private String condition;
         private String descr;
         private String icon;
+        private String day;
 
 
         private float pressure;
         private float humidity;
+
+        public String getDay(){ return this.day;}
+        public void setDay(String day) {
+            this.day = day;
+        }
 
         public int getWeatherId() {
             return weatherId;

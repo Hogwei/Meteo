@@ -38,13 +38,18 @@ public class MainActivity extends ActionBarActivity {
     private GridView gridView;
     private TextView jouractuel;
     private TextView joursuivants;
+    public int mode;
+
+    final static int DEBUG_MODE = 0;
+    final static int GPS_MODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Ville temporaire
-        String city = "Angers,FR";
+        // Choix du mode d'acquisition des données météo
+        mode = GPS_MODE;
+        String debug_city = "Angers,FR";
 
         // Binding
         setContentView(R.layout.activity_main);
@@ -69,6 +74,11 @@ public class MainActivity extends ActionBarActivity {
             public void onLocationChanged(Location location) {
                 longitude = location.getLongitude();
                 latitude = location.getLatitude();
+                if(mode==GPS_MODE & isNetworkAvailable()){
+                    JSONWeatherTask task = new JSONWeatherTask();
+                    task.execute(new String[]{"" + latitude, "" + longitude});
+                }
+
             }
 
             public void onProviderDisabled(String arg0) {
@@ -90,7 +100,16 @@ public class MainActivity extends ActionBarActivity {
 
         // Traitement : Meteo
         JSONWeatherTask task = new JSONWeatherTask();
-        if(isNetworkAvailable())    task.execute(new String[]{city});
+        switch (mode){
+            case DEBUG_MODE :
+                if(isNetworkAvailable())    task.execute(new String[]{debug_city});
+                break;
+            case GPS_MODE :
+                if(isNetworkAvailable())    task.execute(new String[]{"" + latitude, "" + longitude});
+                break;
+            default :
+                task.execute(new String[]{debug_city});
+        }
 
     }
 
@@ -125,13 +144,30 @@ public class MainActivity extends ActionBarActivity {
             String data;
 
             try {
-                //Meteo du jour
-                data = ( (new WeatherHttpClient()).getWeatherData(params[0], WeatherHttpClient.GET_CURRENT));
-                previsions.add(JSONWeatherParser.getWeather(data));
+                switch (mode){
+                    case DEBUG_MODE :
+                        //Meteo du jour
+                        data = ( (new WeatherHttpClient()).getWeatherData(params[0], WeatherHttpClient.GET_CURRENT));
+                        previsions.add(JSONWeatherParser.getWeather(data));
 
-                //Previsions a J+5
-                data = ( (new WeatherHttpClient()).getWeatherData(params[0], WeatherHttpClient.GET_FORECAST));
-                previsions.addAll(JSONWeatherParser.getForecast(data));
+                        //Previsions a J+5
+                        data = ( (new WeatherHttpClient()).getWeatherData(params[0], WeatherHttpClient.GET_FORECAST));
+                        previsions.addAll(JSONWeatherParser.getForecast(data));
+
+                        break;
+
+                    case GPS_MODE :
+                        //Meteo du jour
+                        data = ( (new WeatherHttpClient()).getWeatherData(Double.parseDouble(params[0]), Double.parseDouble(params[1]), WeatherHttpClient.GET_CURRENT));
+                        previsions.add(JSONWeatherParser.getWeather(data));
+
+                        //Previsions a J+5
+                        data = ( (new WeatherHttpClient()).getWeatherData(Double.parseDouble(params[0]), Double.parseDouble(params[1]), WeatherHttpClient.GET_FORECAST));
+                        previsions.addAll(JSONWeatherParser.getForecast(data));
+
+                        break;
+                }
+
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -148,7 +184,7 @@ public class MainActivity extends ActionBarActivity {
             super.onPostExecute(previsions);
 
             // Meteo du jour
-            jouractuel.setText(""+previsions.get(0).day);
+            jouractuel.setText(""+previsions.get(0).currentCondition.getDay());
             cityText.setText(" " + previsions.get(0).location.getCity() + " (" + previsions.get(0).location.getCountry()+")");
             condDescr.setText(previsions.get(0).currentCondition.getDescr());
             temp.setText("Température :" + Math.round((previsions.get(0).temperature.getTemp() - 273.15)) + "°C");
@@ -172,7 +208,7 @@ public class MainActivity extends ActionBarActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public String getWindDirection(float windDeg){
+    public static String getWindDirection(float windDeg){
         if(windDeg>=0 && windDeg<22)        return("Nord");
         if(windDeg>=22 && windDeg<67)       return("Nord-Est");
         if(windDeg>=67 && windDeg<112)      return("Est");

@@ -66,7 +66,7 @@ public class JSONWeatherParser {
 
         // Jour
         Calendar today = Calendar.getInstance();
-        weather.day = getDay(today.DAY_OF_WEEK) + " " + today.DAY_OF_MONTH + " " + getMonth(today.MONTH);
+        weather.currentCondition.setDay(getDay(today.DAY_OF_WEEK) + " " + today.DAY_OF_MONTH + " " + getMonth(today.MONTH));
 
         return weather;
     }
@@ -113,8 +113,8 @@ public class JSONWeatherParser {
             weather.clouds.setPerc(getInt("clouds", JSONForecast));
 
             // Jour
-            weather.day = getDay(today.DAY_OF_WEEK) + " " + today.DAY_OF_MONTH + " " + getMonth(today.MONTH);
-            today.add(Calendar.DAY_OF_MONTH,1);
+            today.add(Calendar.DATE,1);
+            weather.currentCondition.setDay(getDay(today.DAY_OF_WEEK) + " " + today.DAY_OF_MONTH + " " + getMonth(today.MONTH));
 
             //Ajout de l'objet Weather a la liste
             weatherList.add(weather);

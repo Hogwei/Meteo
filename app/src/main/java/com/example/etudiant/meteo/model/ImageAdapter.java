@@ -5,10 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.etudiant.meteo.MainActivity;
 import com.example.etudiant.meteo.R;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public class ImageAdapter extends BaseAdapter{
         // set value into textview
         TextView textView = (TextView) gridView
                 .findViewById(R.id.joursuivant);
-        textView.setText(weather.day);
+        textView.setText(weather.currentCondition.getDay());
 
         // set image based on selected text
         ImageView imageView = (ImageView) gridView
@@ -64,22 +64,7 @@ public class ImageAdapter extends BaseAdapter{
         // set value into textview
         textView = (TextView) gridView
                 .findViewById(R.id.windDeg);
-        if(weather.wind.getDeg()==0)
-            textView.setText("Direction : Nord");
-        if(weather.wind.getDeg()>0 && weather.wind.getDeg()<90 )
-            textView.setText("Direction : Nord-est");
-        if(weather.wind.getDeg()==90)
-            textView.setText("Direction : Est");
-        if(weather.wind.getDeg()>90 && weather.wind.getDeg()<180 )
-            textView.setText("Direction : Sud-Est");
-        if(weather.wind.getDeg()==180)
-            textView.setText("Direction : Sud");
-        if(weather.wind.getDeg()>180 && weather.wind.getDeg()<270)
-            textView.setText("Direction : Sud-Ouest");
-        if(weather.wind.getDeg()==270)
-            textView.setText("Direction : Ouest");
-        if(weather.wind.getDeg()>270 && weather.wind.getDeg()<360)
-            textView.setText("Direction : Nord-ouest");
+        textView.setText("" + MainActivity.getWindDirection(weather.wind.getDeg()));
 
         // set value into textview
         textView = (TextView) gridView
