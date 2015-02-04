@@ -1,10 +1,6 @@
 package com.example.etudiant.meteo;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -21,10 +17,6 @@ import android.widget.TextView;
 import com.example.etudiant.meteo.model.Weather;
 
 import org.json.JSONException;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -51,13 +43,13 @@ public class MainActivity extends ActionBarActivity {
 
         String city = "Angers,FR";
 
-       cityText = (TextView) findViewById(R.id.tvCity);
+        cityText = (TextView) findViewById(R.id.tvCity);
         condDescr = (TextView) findViewById(R.id.description);
-      //  temp = (TextView) findViewById(R.id.temp);
+        temp = (TextView) findViewById(R.id.temp);
         hum = (TextView) findViewById(R.id.humidite);
         press = (TextView) findViewById(R.id.pression);
         windSpeed = (TextView) findViewById(R.id.vent);
-        //windDeg = (TextView) findViewById(R.id.windDeg);
+        windDeg = (TextView) findViewById(R.id.windDeg);
         imgView = (ImageView) findViewById(R.id.image);
 
         JSONWeatherTask task = new JSONWeatherTask();
@@ -134,10 +126,6 @@ public class MainActivity extends ActionBarActivity {
 
             try {
                 weather = JSONWeatherParser.getWeather(data);
-
-                // Let's retrieve the icon
-               // weather.iconData = ( (new WeatherHttpClient()).getImage(weather.currentCondition.getIcon()));
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -152,29 +140,29 @@ public class MainActivity extends ActionBarActivity {
         protected void onPostExecute(Weather weather) {
             super.onPostExecute(weather);
 
-            /*if (weather.iconData != null && weather.iconData.length > 0) {
-                Bitmap img = BitmapFactory.decodeByteArray(weather.iconData, 0, weather.iconData.length);
-                imgView.setImageBitmap(img);
-            }*/
-
            cityText.setText(" "+weather.location.getCity() + " (" + weather.location.getCountry()+")");
            condDescr.setText(weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescr() + ")");
-//            temp.setText("" + Math.round((weather.temperature.getTemp() - 273.15)) + "°C");
+            temp.setText("Température :" + Math.round((weather.temperature.getTemp() - 273.15)) + "°C");
             hum.setText("Humidité :" + weather.currentCondition.getHumidity() + "%");
             press.setText("Pression :" + weather.currentCondition.getPressure() + " hPa");
             windSpeed.setText("Vent :" + (int)weather.wind.getSpeed()*3.6 + " km/h");
-  //          windDeg.setText("" + weather.wind.getDeg() + "°");
-
-            switch(weather.currentCondition.getWeatherId()){
-                case 800:imgView.setImageResource(R.drawable.clearsky);break;               //sunny
-                case 801:imgView.setImageResource(R.drawable.fewclouds);break;              //m-cloudy
-                case 802:imgView.setImageResource(R.drawable.scatteredclouds);break;        //partly-cloudy
-                case 803:imgView.setImageResource(R.drawable.brokenclouds);break;           //fair
-                case 804:imgView.setImageResource(R.drawable.overcastclouds);break;         //smoke
-                default : imgView.setImageResource(R.drawable.na);break;
-            }
-
-
+            if(weather.wind.getDeg()==0)
+                windDeg.setText("Direction : Nord");
+            if(weather.wind.getDeg()>0 && weather.wind.getDeg()<90 )
+                windDeg.setText("Direction : Nord-est");
+            if(weather.wind.getDeg()==90)
+                windDeg.setText("Direction : Est");
+            if(weather.wind.getDeg()>90 && weather.wind.getDeg()<180 )
+                windDeg.setText("Direction : Sud-Est");
+            if(weather.wind.getDeg()==180)
+                windDeg.setText("Direction : Sud");
+            if(weather.wind.getDeg()>180 && weather.wind.getDeg()<270)
+                windDeg.setText("Direction : Sud-Ouest");
+            if(weather.wind.getDeg()==270)
+                windDeg.setText("Direction : Ouest");
+            if(weather.wind.getDeg()>270 && weather.wind.getDeg()<360)
+                windDeg.setText("Direction : Nord-ouest");
+            imgView.setImageResource(getResources().getIdentifier("r"+String.valueOf(weather.currentCondition.getWeatherId()), "drawable", "com.example.etudiant.meteo"));
         }
 
 
