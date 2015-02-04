@@ -80,7 +80,7 @@
                     android:id="@+id/image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="100dp"
+                    android:layout_marginLeft="20dp"
                     android:layout_gravity="left"
                     android:layout_marginRight="20dp" />
 
@@ -88,6 +88,7 @@
                     android:id="@+id/description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
                     android:layout_toEndOf="@+id/linearLayout2"
                     android:text="@string/description" />
             </LinearLayout>
@@ -105,12 +106,28 @@
                     android:text="@string/pression" />
 
                 <TextView
+                    android:id="@+id/temp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/pression"
+                    android:layout_below="@+id/pression"
+                    android:text="@string/temperature" />
+
+                <TextView
                     android:id="@+id/vent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignStart="@+id/humidite"
                     android:layout_below="@+id/humidite"
                     android:text="@string/vent" />
+
+                <TextView
+                    android:id="@+id/windDeg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/humidite"
+                    android:layout_below="@+id/humidite"
+                    android:text="@string/ventDirection" />
 
                 <TextView
                     android:id="@+id/humidite"
@@ -133,6 +150,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:layout_marginRight="10dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -151,7 +169,14 @@
                     android:layout_height="wrap_content"
                     android:layout_alignEnd="@+id/textView6"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/fog" />
+                    android:src="@drawable/r600" />
+
+                <TextView
+                    android:id="@+id/descriptionj1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/linearLayout2"
+                    android:text="@string/description" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -164,17 +189,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:layout_alignStart="@+id/humidite"
-                    android:layout_below="@+id/humidite"
-                    android:text="@string/vent" />
+                    android:layout_alignStart="@+id/pression"
+                    android:layout_below="@+id/pression"
+                    android:text="@string/temperature" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:layout_alignStart="@+id/pression"
-                    android:layout_below="@+id/pression"
-                    android:text="@string/humidite" />
+                    android:layout_alignStart="@+id/humidite"
+                    android:layout_below="@+id/humidite"
+                    android:text="@string/vent" />
 
             </LinearLayout>
 
@@ -182,6 +207,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:layout_marginRight="10dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -197,7 +223,14 @@
                     android:id="@+id/imageJ2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/clearsky" />
+                    android:src="@drawable/r800" />
+
+                <TextView
+                    android:id="@+id/descriptionj2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/linearLayout2"
+                    android:text="@string/description" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -210,17 +243,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:layout_alignStart="@+id/humidite"
-                    android:layout_below="@+id/humidite"
-                    android:text="@string/vent" />
+                    android:layout_alignStart="@+id/pression"
+                    android:layout_below="@+id/pression"
+                    android:text="@string/temperature" />
+
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:layout_alignStart="@+id/pression"
-                    android:layout_below="@+id/pression"
-                    android:text="@string/humidite" />
+                    android:layout_alignStart="@+id/humidite"
+                    android:layout_below="@+id/humidite"
+                    android:text="@string/vent" />
+
 
             </LinearLayout>
 
@@ -228,6 +263,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:layout_marginRight="10dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -242,7 +278,14 @@
                     android:id="@+id/imageJ3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/wind" />
+                    android:src="@drawable/r711" />
+
+                <TextView
+                    android:id="@+id/descriptionj3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/linearLayout2"
+                    android:text="@string/description" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -255,17 +298,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:layout_alignStart="@+id/humidite"
-                    android:layout_below="@+id/humidite"
-                    android:text="@string/vent" />
+                    android:layout_alignStart="@+id/pression"
+                    android:layout_below="@+id/pression"
+                    android:text="@string/temperature" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:layout_alignStart="@+id/pression"
-                    android:layout_below="@+id/pression"
-                    android:text="@string/humidite" />
+                    android:layout_alignStart="@+id/humidite"
+                    android:layout_below="@+id/humidite"
+                    android:text="@string/vent" />
 
             </LinearLayout>
 
@@ -273,19 +316,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:layout_marginRight="10dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/J4"></TextView>
+                    android:text="@string/J4"/>
 
                 <ImageView
                     android:id="@+id/imageJ4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/moon" />
+                    android:src="@drawable/r302" />
+
+                <TextView
+                    android:id="@+id/descriptionj4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/linearLayout2"
+                    android:text="@string/description" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -298,17 +349,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:layout_alignStart="@+id/humidite"
-                    android:layout_below="@+id/humidite"
-                    android:text="@string/vent" />
+                    android:layout_alignStart="@+id/pression"
+                    android:layout_below="@+id/pression"
+                    android:text="@string/temperature" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:layout_alignStart="@+id/pression"
-                    android:layout_below="@+id/pression"
-                    android:text="@string/humidite" />
+                    android:layout_alignStart="@+id/humidite"
+                    android:layout_below="@+id/humidite"
+                    android:text="@string/vent" />
 
             </LinearLayout>
 
@@ -322,15 +373,20 @@
                     android:id="@+id/textView5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/J5">
-
-                </TextView>
+                    android:text="@string/J5"/>
 
                 <ImageView
                     android:id="@+id/imageJ5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/rainy" />
+                    android:src="@drawable/r500" />
+
+                <TextView
+                    android:id="@+id/descriptionj5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/linearLayout2"
+                    android:text="@string/description" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -343,21 +399,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:layout_alignStart="@+id/humidite"
-                    android:layout_below="@+id/humidite"
-                    android:text="@string/vent" />
+                    android:layout_alignStart="@+id/pression"
+                    android:layout_below="@+id/pression"
+                    android:text="@string/temperature" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:layout_alignStart="@+id/pression"
-                    android:layout_below="@+id/pression"
-                    android:text="@string/humidite" />
+                    android:layout_alignStart="@+id/humidite"
+                    android:layout_below="@+id/humidite"
+                    android:text="@string/vent" />
 
             </LinearLayout>
         </LinearLayout>
-
-
     </RelativeLayout>
 </ScrollView>

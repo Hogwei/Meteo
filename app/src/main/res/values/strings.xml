@@ -7,6 +7,8 @@
     <string name="pression">Pression :</string>
     <string name="humidite">Humidité :</string>
     <string name="vent">Vent :</string>
+    <string name="ventDirection">Direction Vent :</string>
+    <string name="temperature">Température :</string>
     <string name="aujourdhui">Aujourd\'hui</string>
     <string name="description">Description</string>
     <string name="J1">J+1</string>
