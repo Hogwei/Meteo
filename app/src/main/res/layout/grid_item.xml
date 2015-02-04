@@ -11,6 +11,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/textView8"
+
             android:layout_toEndOf="@+id/linearLayout">
 
         </TextView>
@@ -26,14 +27,14 @@
         <TextView
             android:id="@+id/descriptionj1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_toEndOf="@+id/linearLayout2"
             android:text="@string/description" />
 
         <TextView
             android:id="@+id/pressionj1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginTop="20dp"
             android:layout_toEndOf="@+id/linearLayout2"
             android:text="@string/pression" />
@@ -41,7 +42,7 @@
         <TextView
             android:id="@+id/temperaturej1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginTop="20dp"
             android:layout_alignStart="@+id/pression"
             android:layout_below="@+id/pression"
@@ -50,7 +51,7 @@
         <TextView
             android:id="@+id/windDeg"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_alignStart="@+id/humidite"
             android:layout_below="@+id/humidite"
             android:text="@string/ventDirection" />
@@ -58,7 +59,7 @@
         <TextView
             android:id="@+id/ventj1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginTop="20dp"
             android:layout_alignStart="@+id/humidite"
             android:layout_below="@+id/humidite"

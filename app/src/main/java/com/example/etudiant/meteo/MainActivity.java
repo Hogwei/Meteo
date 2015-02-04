@@ -184,7 +184,6 @@ public class MainActivity extends ActionBarActivity {
             super.onPostExecute(previsions);
 
             // Meteo du jour
-            jouractuel.setText(""+previsions.get(0).currentCondition.getDay());
             cityText.setText(" " + previsions.get(0).location.getCity() + " (" + previsions.get(0).location.getCountry()+")");
             condDescr.setText(previsions.get(0).currentCondition.getDescr());
             temp.setText("Température :" + Math.round((previsions.get(0).temperature.getTemp() - 273.15)) + "°C");

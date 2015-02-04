@@ -38,7 +38,7 @@ public class ImageAdapter extends BaseAdapter{
         // set value into textview
         TextView textView = (TextView) gridView
                 .findViewById(R.id.joursuivant);
-        textView.setText(weather.currentCondition.getDay());
+        textView.setText("J+"+(position+1));
 
         // set image based on selected text
         ImageView imageView = (ImageView) gridView

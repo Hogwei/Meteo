@@ -55,6 +55,7 @@
             <TextView
                 android:id="@+id/jouractuel"
                 android:layout_width="wrap_content"
+                android:text="Aujourd'hui"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/linearLayout4"
                 android:layout_alignEnd="@+id/linearLayout3" />
