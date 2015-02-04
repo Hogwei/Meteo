@@ -156,17 +156,17 @@ public class JSONWeatherParser {
     private static String getMonth(int month){
         switch (month){
             case Calendar.JANUARY :     return("Janvier");
-            case Calendar.FEBRUARY :    return("Janvier");
-            case Calendar.MARCH :       return("Janvier");
-            case Calendar.APRIL :       return("Janvier");
-            case Calendar.MAY :         return("Janvier");
-            case Calendar.JUNE :        return("Janvier");
-            case Calendar.JULY :        return("Janvier");
-            case Calendar.AUGUST :      return("Janvier");
-            case Calendar.SEPTEMBER :   return("Janvier");
-            case Calendar.OCTOBER :     return("Janvier");
-            case Calendar.NOVEMBER :    return("Janvier");
-            case Calendar.DECEMBER :    return("Janvier");
+            case Calendar.FEBRUARY :    return("Fevrier");
+            case Calendar.MARCH :       return("Mars");
+            case Calendar.APRIL :       return("Avril");
+            case Calendar.MAY :         return("Mai");
+            case Calendar.JUNE :        return("Juin");
+            case Calendar.JULY :        return("Juillet");
+            case Calendar.AUGUST :      return("Aout");
+            case Calendar.SEPTEMBER :   return("Septembre");
+            case Calendar.OCTOBER :     return("Octobre");
+            case Calendar.NOVEMBER :    return("Novembre");
+            case Calendar.DECEMBER :    return("Decembre");
             default :                   return("=getMonthFail=");
 
         }
