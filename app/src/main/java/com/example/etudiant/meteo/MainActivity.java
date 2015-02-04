@@ -7,8 +7,8 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -18,11 +18,11 @@ import com.example.etudiant.meteo.model.Weather;
 
 import org.json.JSONException;
 
+import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
     double latitude, longitude;
-    private TextView tvCoordonnes;
 
     private TextView cityText;
     private TextView condDescr;
@@ -55,7 +55,6 @@ public class MainActivity extends ActionBarActivity {
         JSONWeatherTask task = new JSONWeatherTask();
         if(isNetworkAvailable())    task.execute(new String[]{city});
 
-        tvCoordonnes = (TextView) findViewById(R.id.tvCity);
 
 
         LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
@@ -66,7 +65,6 @@ public class MainActivity extends ActionBarActivity {
             public void onLocationChanged(Location location) {
                 longitude = location.getLongitude();
                 latitude = location.getLatitude();
-            //    tvCoordonnes.setText(latitude + " / " + longitude);
             }
 
             public void onProviderDisabled(String arg0) {
@@ -122,10 +120,18 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected Weather doInBackground(String... params) {
             Weather weather = new Weather();
-            String data = ( (new WeatherHttpClient()).getWeatherData(params[0]));
+            List<Weather> forecast = new ArrayList<>();
+            String data;
 
             try {
+                //Meteo du jour
+                data = ( (new WeatherHttpClient()).getWeatherData(params[0], WeatherHttpClient.GET_CURRENT));
                 weather = JSONWeatherParser.getWeather(data);
+
+                //Previsions a J+5
+                data = ( (new WeatherHttpClient()).getWeatherData(params[0], WeatherHttpClient.GET_FORECAST));
+                forecast.addAll(JSONWeatherParser.getForecast(data));
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -180,5 +186,3 @@ public class MainActivity extends ActionBarActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
-
-
