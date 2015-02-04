@@ -4,6 +4,7 @@ package com.example.etudiant.meteo.model;
  * Created by Seb on 03/02/15.
  */
 public class Weather {
+    public String day;
     public Location location;
     public CurrentCondition currentCondition = new CurrentCondition();
     public Temperature temperature = new Temperature();

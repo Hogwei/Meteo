@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -63,6 +64,10 @@ public class JSONWeatherParser {
         JSONObject cObj = getObject("clouds", jObj);
         weather.clouds.setPerc(getInt("all", cObj));
 
+        // Jour
+        Calendar today = Calendar.getInstance();
+        weather.day = getDay(today.DAY_OF_WEEK) + " " + today.DAY_OF_MONTH + " " + getMonth(today.MONTH);
+
         return weather;
     }
 
@@ -77,6 +82,7 @@ public class JSONWeatherParser {
         // Extraction des previsions
         JSONArray jForecastArr = jObj.getJSONArray("list");
         int nbPrevisions = jObj.getInt("cnt");
+        Calendar today = Calendar.getInstance();
         for(int i=0; i<nbPrevisions ; i++){
 
             // Nouvel objet Weather pour chaque journee
@@ -106,6 +112,10 @@ public class JSONWeatherParser {
             // Nuages
             weather.clouds.setPerc(getInt("clouds", JSONForecast));
 
+            // Jour
+            weather.day = getDay(today.DAY_OF_WEEK) + " " + today.DAY_OF_MONTH + " " + getMonth(today.MONTH);
+            today.add(Calendar.DAY_OF_MONTH,1);
+
             //Ajout de l'objet Weather a la liste
             weatherList.add(weather);
         }
@@ -128,5 +138,37 @@ public class JSONWeatherParser {
 
     private static int  getInt(String tagName, JSONObject jObj) throws JSONException {
         return jObj.getInt(tagName);
+    }
+
+    private static String getDay(int day){
+        switch (day){
+            case Calendar.MONDAY :      return ("Lundi");
+            case Calendar.TUESDAY :     return ("Mardi");
+            case Calendar.WEDNESDAY :   return ("Mercredi");
+            case Calendar.THURSDAY :    return ("Jeudi");
+            case Calendar.FRIDAY :      return ("Vendredi");
+            case Calendar.SATURDAY :    return ("Samedi");
+            case Calendar.SUNDAY :      return ("Dimanche");
+            default :                   return("=getDayFail=");
+        }
+    }
+
+    private static String getMonth(int month){
+        switch (month){
+            case Calendar.JANUARY :     return("Janvier");
+            case Calendar.FEBRUARY :    return("Janvier");
+            case Calendar.MARCH :       return("Janvier");
+            case Calendar.APRIL :       return("Janvier");
+            case Calendar.MAY :         return("Janvier");
+            case Calendar.JUNE :        return("Janvier");
+            case Calendar.JULY :        return("Janvier");
+            case Calendar.AUGUST :      return("Janvier");
+            case Calendar.SEPTEMBER :   return("Janvier");
+            case Calendar.OCTOBER :     return("Janvier");
+            case Calendar.NOVEMBER :    return("Janvier");
+            case Calendar.DECEMBER :    return("Janvier");
+            default :                   return("=getMonthFail=");
+
+        }
     }
 }

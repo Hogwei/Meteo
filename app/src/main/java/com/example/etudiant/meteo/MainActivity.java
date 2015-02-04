@@ -11,9 +11,9 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.GridView;
 
 import com.example.etudiant.meteo.model.ImageAdapter;
 import com.example.etudiant.meteo.model.Weather;
@@ -37,16 +37,16 @@ public class MainActivity extends ActionBarActivity {
     private ImageView imgView;
     private GridView gridView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
-
-
+        // Ville temporaire
         String city = "Angers,FR";
 
-        gridView = (GridView) findViewById(R.id.gridview);
+        // Binding
+        setContentView(R.layout.activity_main);
         cityText = (TextView) findViewById(R.id.tvCity);
         condDescr = (TextView) findViewById(R.id.description);
         temp = (TextView) findViewById(R.id.temp);
@@ -55,12 +55,9 @@ public class MainActivity extends ActionBarActivity {
         windSpeed = (TextView) findViewById(R.id.vent);
         windDeg = (TextView) findViewById(R.id.windDeg);
         imgView = (ImageView) findViewById(R.id.image);
+        gridView = (GridView) findViewById(R.id.gridview);
 
-        JSONWeatherTask task = new JSONWeatherTask();
-        if(isNetworkAvailable())    task.execute(new String[]{city});
-
-
-
+        // Traitement : GPS
         LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         longitude = 0.0;
@@ -86,15 +83,14 @@ public class MainActivity extends ActionBarActivity {
 
             }
         };
-
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
+
+        // Traitement : Meteo
+        JSONWeatherTask task = new JSONWeatherTask();
+        if(isNetworkAvailable())    task.execute(new String[]{city});
+
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-      //  getWeather();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -122,58 +118,47 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         protected List<Weather> doInBackground(String... params) {
-            List<Weather> forecast = new ArrayList<>();
+            List<Weather> previsions = new ArrayList<>();
             String data;
 
             try {
                 //Meteo du jour
                 data = ( (new WeatherHttpClient()).getWeatherData(params[0], WeatherHttpClient.GET_CURRENT));
-                forecast.add(JSONWeatherParser.getWeather(data));
+                previsions.add(JSONWeatherParser.getWeather(data));
 
                 //Previsions a J+5
                 data = ( (new WeatherHttpClient()).getWeatherData(params[0], WeatherHttpClient.GET_FORECAST));
-                forecast.addAll(JSONWeatherParser.getForecast(data));
+                previsions.addAll(JSONWeatherParser.getForecast(data));
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return forecast;
+            return previsions;
 
         }
+
 
 
 
         @Override
-        protected void onPostExecute(List<Weather> forecast) {
-            super.onPostExecute(forecast);
+        protected void onPostExecute(List<Weather> previsions) {
+            super.onPostExecute(previsions);
 
-           cityText.setText(" " + forecast.get(0).location.getCity() + " (" + forecast.get(0).location.getCountry()+")");
-           condDescr.setText(forecast.get(0).currentCondition.getCondition() + "(" + forecast.get(0).currentCondition.getDescr() + ")");
-            temp.setText("Température :" + Math.round((forecast.get(0).temperature.getTemp() - 273.15)) + "°C");
-            hum.setText("Humidité :" + forecast.get(0).currentCondition.getHumidity() + "%");
-            press.setText("Pression :" + forecast.get(0).currentCondition.getPressure() + " hPa");
-            windSpeed.setText("Vent :" + (int)forecast.get(0).wind.getSpeed()*3.6 + " km/h");
-            if(forecast.get(0).wind.getDeg()==0)
-                windDeg.setText("Direction : Nord");
-            if(forecast.get(0).wind.getDeg()>0 && forecast.get(0).wind.getDeg()<90 )
-                windDeg.setText("Direction : Nord-est");
-            if(forecast.get(0).wind.getDeg()==90)
-                windDeg.setText("Direction : Est");
-            if(forecast.get(0).wind.getDeg()>90 && forecast.get(0).wind.getDeg()<180 )
-                windDeg.setText("Direction : Sud-Est");
-            if(forecast.get(0).wind.getDeg()==180)
-                windDeg.setText("Direction : Sud");
-            if(forecast.get(0).wind.getDeg()>180 && forecast.get(0).wind.getDeg()<270)
-                windDeg.setText("Direction : Sud-Ouest");
-            if(forecast.get(0).wind.getDeg()==270)
-                windDeg.setText("Direction : Ouest");
-            if(forecast.get(0).wind.getDeg()>270 && forecast.get(0).wind.getDeg()<360)
-                windDeg.setText("Direction : Nord-ouest");
-            imgView.setImageResource(getResources().getIdentifier("r"+String.valueOf(forecast.get(0).currentCondition.getWeatherId()), "drawable", "com.example.etudiant.meteo"));
+            // Meteo du jour
+            cityText.setText(" " + previsions.get(0).location.getCity() + " (" + previsions.get(0).location.getCountry()+")");
+            condDescr.setText(previsions.get(0).currentCondition.getCondition() + "(" + previsions.get(0).currentCondition.getDescr() + ")");
+            temp.setText("Température :" + Math.round((previsions.get(0).temperature.getTemp() - 273.15)) + "°C");
+            hum.setText("Humidité :" + previsions.get(0).currentCondition.getHumidity() + "%");
+            press.setText("Pression :" + previsions.get(0).currentCondition.getPressure() + " hPa");
+            windSpeed.setText("Vent :" + (int)previsions.get(0).wind.getSpeed()*3.6 + " km/h");
+            windDeg.setText("Direction : " + getWindDirection(previsions.get(0).wind.getDeg()));
+            imgView.setImageResource(getResources().getIdentifier("r" + String.valueOf(previsions.get(0).currentCondition.getWeatherId()), "drawable", "com.example.etudiant.meteo"));
 
-            forecast.remove(0);
-            gridView.setAdapter(new ImageAdapter(MainActivity.this,forecast));
+            // Previsions à J+5
+            previsions.remove(0);
+            gridView.setAdapter(new ImageAdapter(MainActivity.this,previsions));
         }
+
     }
 
     private boolean isNetworkAvailable() {
@@ -181,5 +166,19 @@ public class MainActivity extends ActionBarActivity {
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public String getWindDirection(float windDeg){
+        if(windDeg>=0 && windDeg<22)        return("Nord");
+        if(windDeg>=22 && windDeg<67)       return("Nord-Est");
+        if(windDeg>=67 && windDeg<112)      return("Est");
+        if(windDeg>=112 && windDeg<157)     return("Sud-Est");
+        if(windDeg>=157 && windDeg<202)     return("Sud");
+        if(windDeg>=202 && windDeg<247)     return("Sud-Ouest");
+        if(windDeg>=247 && windDeg<292)     return("Ouest");
+        if(windDeg>=292 && windDeg<337)     return("Nord-Ouest");
+        if(windDeg>=337 && windDeg<360)     return("Nord");
+
+        return("failWindDirection");
     }
 }
