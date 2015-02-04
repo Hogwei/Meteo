@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textView8"
+            android:layout_toEndOf="@+id/linearLayout"
+            android:text="@string/J1">
+
+        </TextView>
+
+        <ImageView
+            android:id="@+id/imageJ1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/textView6"
+            android:layout_centerVertical="true"
+            android:src="@drawable/r600" />
+
+        <TextView
+            android:id="@+id/descriptionj1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/linearLayout2"
+            android:text="@string/description" />
+
+        <TextView
+            android:id="@+id/pressionj1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_toEndOf="@+id/linearLayout2"
+            android:text="@string/pression" />
+
+        <TextView
+            android:id="@+id/temperaturej1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_alignStart="@+id/pression"
+            android:layout_below="@+id/pression"
+            android:text="@string/temperature" />
+
+        <TextView
+            android:id="@+id/windDeg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/humidite"
+            android:layout_below="@+id/humidite"
+            android:text="@string/ventDirection" />
+
+        <TextView
+            android:id="@+id/ventj1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_alignStart="@+id/humidite"
+            android:layout_below="@+id/humidite"
+            android:text="@string/vent" />
+
+</LinearLayout>

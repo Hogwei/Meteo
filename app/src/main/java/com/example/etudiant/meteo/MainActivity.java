@@ -13,11 +13,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.GridView;
 
+import com.example.etudiant.meteo.model.ImageAdapter;
 import com.example.etudiant.meteo.model.Weather;
 
 import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
@@ -32,7 +35,7 @@ public class MainActivity extends ActionBarActivity {
     private TextView windSpeed;
     private TextView windDeg;
     private ImageView imgView;
-
+    private GridView gridView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,7 @@ public class MainActivity extends ActionBarActivity {
 
         String city = "Angers,FR";
 
+        gridView = (GridView) findViewById(R.id.gridview);
         cityText = (TextView) findViewById(R.id.tvCity);
         condDescr = (TextView) findViewById(R.id.description);
         temp = (TextView) findViewById(R.id.temp);
@@ -84,7 +88,6 @@ public class MainActivity extends ActionBarActivity {
         };
 
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
-        //tvCoordonnes.setText(latitude + " / " + longitude);
     }
 
     @Override
@@ -115,18 +118,17 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class JSONWeatherTask extends AsyncTask<String, Void, Weather> {
+    private class JSONWeatherTask extends AsyncTask<String, Void, List<Weather>> {
 
         @Override
-        protected Weather doInBackground(String... params) {
-            Weather weather = new Weather();
+        protected List<Weather> doInBackground(String... params) {
             List<Weather> forecast = new ArrayList<>();
             String data;
 
             try {
                 //Meteo du jour
                 data = ( (new WeatherHttpClient()).getWeatherData(params[0], WeatherHttpClient.GET_CURRENT));
-                weather = JSONWeatherParser.getWeather(data);
+                forecast.add(JSONWeatherParser.getWeather(data));
 
                 //Previsions a J+5
                 data = ( (new WeatherHttpClient()).getWeatherData(params[0], WeatherHttpClient.GET_FORECAST));
@@ -135,48 +137,43 @@ public class MainActivity extends ActionBarActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return weather;
+            return forecast;
 
         }
-
 
 
 
         @Override
-        protected void onPostExecute(Weather weather) {
-            super.onPostExecute(weather);
+        protected void onPostExecute(List<Weather> forecast) {
+            super.onPostExecute(forecast);
 
-           cityText.setText(" "+weather.location.getCity() + " (" + weather.location.getCountry()+")");
-           condDescr.setText(weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescr() + ")");
-            temp.setText("Température :" + Math.round((weather.temperature.getTemp() - 273.15)) + "°C");
-            hum.setText("Humidité :" + weather.currentCondition.getHumidity() + "%");
-            press.setText("Pression :" + weather.currentCondition.getPressure() + " hPa");
-            windSpeed.setText("Vent :" + (int)weather.wind.getSpeed()*3.6 + " km/h");
-            if(weather.wind.getDeg()==0)
+           cityText.setText(" " + forecast.get(0).location.getCity() + " (" + forecast.get(0).location.getCountry()+")");
+           condDescr.setText(forecast.get(0).currentCondition.getCondition() + "(" + forecast.get(0).currentCondition.getDescr() + ")");
+            temp.setText("Température :" + Math.round((forecast.get(0).temperature.getTemp() - 273.15)) + "°C");
+            hum.setText("Humidité :" + forecast.get(0).currentCondition.getHumidity() + "%");
+            press.setText("Pression :" + forecast.get(0).currentCondition.getPressure() + " hPa");
+            windSpeed.setText("Vent :" + (int)forecast.get(0).wind.getSpeed()*3.6 + " km/h");
+            if(forecast.get(0).wind.getDeg()==0)
                 windDeg.setText("Direction : Nord");
-            if(weather.wind.getDeg()>0 && weather.wind.getDeg()<90 )
+            if(forecast.get(0).wind.getDeg()>0 && forecast.get(0).wind.getDeg()<90 )
                 windDeg.setText("Direction : Nord-est");
-            if(weather.wind.getDeg()==90)
+            if(forecast.get(0).wind.getDeg()==90)
                 windDeg.setText("Direction : Est");
-            if(weather.wind.getDeg()>90 && weather.wind.getDeg()<180 )
+            if(forecast.get(0).wind.getDeg()>90 && forecast.get(0).wind.getDeg()<180 )
                 windDeg.setText("Direction : Sud-Est");
-            if(weather.wind.getDeg()==180)
+            if(forecast.get(0).wind.getDeg()==180)
                 windDeg.setText("Direction : Sud");
-            if(weather.wind.getDeg()>180 && weather.wind.getDeg()<270)
+            if(forecast.get(0).wind.getDeg()>180 && forecast.get(0).wind.getDeg()<270)
                 windDeg.setText("Direction : Sud-Ouest");
-            if(weather.wind.getDeg()==270)
+            if(forecast.get(0).wind.getDeg()==270)
                 windDeg.setText("Direction : Ouest");
-            if(weather.wind.getDeg()>270 && weather.wind.getDeg()<360)
+            if(forecast.get(0).wind.getDeg()>270 && forecast.get(0).wind.getDeg()<360)
                 windDeg.setText("Direction : Nord-ouest");
-            imgView.setImageResource(getResources().getIdentifier("r"+String.valueOf(weather.currentCondition.getWeatherId()), "drawable", "com.example.etudiant.meteo"));
+            imgView.setImageResource(getResources().getIdentifier("r"+String.valueOf(forecast.get(0).currentCondition.getWeatherId()), "drawable", "com.example.etudiant.meteo"));
+
+            forecast.remove(0);
+            gridView.setAdapter(new ImageAdapter(MainActivity.this,forecast));
         }
-
-
-
-
-
-
-
     }
 
     private boolean isNetworkAvailable() {
