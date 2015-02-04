@@ -13,32 +13,58 @@ import java.net.URL;
 public class WeatherHttpClient {
 
 
-    private static String CURRENT_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
-    private static String FORECAST_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?q=";
+    private static String CURRENT_URL = "http://api.openweathermap.org/data/2.5/weather?";
+    private static String FORECAST_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?";
     private static String NBPREVISONS = "&cnt=5";
     private static String LANGUE = "&lang=fr";
 
     final static int GET_CURRENT = 0;
     final static int GET_FORECAST = 1;
 
-
     public String getWeatherData(String location, int param) {
+        String url = new String();
+
+        switch (param){
+            case GET_CURRENT :
+                url = (CURRENT_URL + "q=" + location + LANGUE);break;
+            case GET_FORECAST :
+                url = (FORECAST_URL + "q=" + location + NBPREVISONS + LANGUE);
+                break;
+            default :
+                System.out.println("==========LOCATION ERROR=========");
+                break;
+
+        }
+        return(getWeatherData(url));
+    }
+
+
+    public String getWeatherData(double lat, double lon, int param) {
+        String url = new String();
+
+        switch (param){
+            case GET_CURRENT :
+                url = (CURRENT_URL + "lat=" + lat + "&lon=" + lon + LANGUE);break;
+            case GET_FORECAST :
+                url = (FORECAST_URL + "lat=" + lat + "&lon=" + lon + NBPREVISONS + LANGUE);
+                break;
+            default :
+                System.out.println("==========LOCATION ERROR=========");
+                break;
+
+        }
+        return(getWeatherData(url));
+    }
+
+
+    public String getWeatherData(String url) {
         HttpURLConnection con = null ;
         InputStream is = null;
 
-        try {
-            switch (param){
-                case GET_CURRENT :
-                    con = (HttpURLConnection) ( new URL(CURRENT_URL + location + LANGUE)).openConnection();
-                    break;
-                case GET_FORECAST :
-                    con = (HttpURLConnection) ( new URL(FORECAST_URL + location + NBPREVISONS + LANGUE)).openConnection();
-                    break;
-                default :
-                    System.out.println("==========ERROR=========");
-                    break;
 
-            }
+
+        try {
+            con = (HttpURLConnection) ( new URL(url).openConnection());
             con.setRequestMethod("GET");
             con.setDoInput(true);
             con.setDoOutput(true);
