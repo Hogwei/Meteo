@@ -36,7 +36,8 @@ public class MainActivity extends ActionBarActivity {
     private TextView windDeg;
     private ImageView imgView;
     private GridView gridView;
-
+    private TextView jouractuel;
+    private TextView joursuivants;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,8 @@ public class MainActivity extends ActionBarActivity {
 
         // Binding
         setContentView(R.layout.activity_main);
+        jouractuel = (TextView) findViewById(R.id.jouractuel);
+        joursuivants = (TextView) findViewById(R.id.joursuivant);
         cityText = (TextView) findViewById(R.id.tvCity);
         condDescr = (TextView) findViewById(R.id.description);
         temp = (TextView) findViewById(R.id.temp);
@@ -145,8 +148,9 @@ public class MainActivity extends ActionBarActivity {
             super.onPostExecute(previsions);
 
             // Meteo du jour
+            jouractuel.setText(""+previsions.get(0).day);
             cityText.setText(" " + previsions.get(0).location.getCity() + " (" + previsions.get(0).location.getCountry()+")");
-            condDescr.setText(previsions.get(0).currentCondition.getCondition() + "(" + previsions.get(0).currentCondition.getDescr() + ")");
+            condDescr.setText(previsions.get(0).currentCondition.getDescr());
             temp.setText("Température :" + Math.round((previsions.get(0).temperature.getTemp() - 273.15)) + "°C");
             hum.setText("Humidité :" + previsions.get(0).currentCondition.getHumidity() + "%");
             press.setText("Pression :" + previsions.get(0).currentCondition.getPressure() + " hPa");

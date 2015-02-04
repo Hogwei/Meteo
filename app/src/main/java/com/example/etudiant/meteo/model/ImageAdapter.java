@@ -35,6 +35,10 @@ public class ImageAdapter extends BaseAdapter{
         // get layout from mobile.xml
         gridView = inflater.inflate(R.layout.grid_item, parent, false);
 
+        // set value into textview
+        TextView textView = (TextView) gridView
+                .findViewById(R.id.joursuivant);
+        textView.setText(weather.day);
 
         // set image based on selected text
         ImageView imageView = (ImageView) gridView
@@ -43,7 +47,7 @@ public class ImageAdapter extends BaseAdapter{
         imageView.setImageResource(context.getResources().getIdentifier("r"+String.valueOf(weather.currentCondition.getWeatherId()), "drawable", "com.example.etudiant.meteo"));
 
         // set value into textview
-        TextView textView = (TextView) gridView
+        textView = (TextView) gridView
                 .findViewById(R.id.descriptionj1);
         textView.setText(weather.currentCondition.getDescr());
 
